@@ -7,8 +7,8 @@ REGION_COUNT=$(awk 'NF && $1 !~ /^#/ {n++} END {print n+0}' "$REGION_FILE")
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 LOGDIR="${SCRIPT_DIR}/logs/$(date +'%Y%m%d-%H%M%S')"
 
-accountID=r00223 		            # required for IU slurm submission
-email=robfren@iu.edu 	            # for SLURM email notifications
+accountID=${ACC_ID} 		        # required for IU slurm submission
+email=${EMAIL}       	            # for SLURM email notifications
 curTime=`date +"%Y%m%d-%H%M%S"`     # pull date for -o/-e logs
 
 mkdir -p "$LOGDIR"                  # make log directory
@@ -21,7 +21,7 @@ sbatch \
     -A ${accountID} \
     --mail-user=${email} \
     --mail-type=END,FAIL,ARRAY_TASKS \
-    --array="0-$((REGION_COUNT - 1))%20" \
+    --array="0-$((REGION_COUNT - 1))%10" \
     --nodes=1 \
     --mem=16G \
     -o "${LOGDIR}/OUTPUT_region_%A_%a.txt" \
